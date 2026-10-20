@@ -23,6 +23,12 @@ After that snapshot, visual inspection prompted a wording-only benefit receipt c
 
 The repository's [verification workflow](https://github.com/arcacomputer/cafe-compute-kit/actions/workflows/ci.yml) reruns installation, source checks, builds, units, real PostgreSQL, authenticated browser flows, actual local-workerd public-page checks, deployment dry-run and the production-dependency audit for the exact public commit. Inspect its head SHA and terminal result; a workflow declaration or old run is not a new pass.
 
+## Vercel port: separate evidence boundary
+
+The native Vercel main/sender adapters were added after the initial clean-room snapshot above. Its recorded unit totals, PostgreSQL/Chromium and local-workerd results remain historical evidence for that snapshot, not a Vercel pass. The setup guides ([English](vercel-setup.md), [español](vercel-setup-es.md)) describe the current source/configuration; they do not certify a deployed Vercel project.
+
+Keep any later native adapter, installed SDK, disposable PostgreSQL and Chromium results bound to their exact candidate and executed commands. A real PostgreSQL/browser leg may still use a synthetic mail outbox or object adapter. Actual Vercel catch-all/original-URL behavior, trusted IP headers, sender outside-root source/traces and final package exclusions require actual target-provider evidence. Live Neon HTTP transport/grants and authorized inbox delivery remain separate checks. No Vercel Blob production adapter is implemented; private photo uploads must remain off, and code-only storage fixtures are not Blob proof. No Vercel deployment or real email send is claimed by this documentation update.
+
 ## Reproduce
 
 ```sh

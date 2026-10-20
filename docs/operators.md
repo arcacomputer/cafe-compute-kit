@@ -2,7 +2,7 @@
 
 Work from the repository root in a trusted shell. Commands below are deliberate actions, not installation hooks. Keep all real inputs and outputs in a restricted directory **outside the entire repository**, not just outside an app. Use fresh staging/live identities; never import real stock into a test fixture.
 
-`PRIVATE_DIR` below means your external restricted directory; it is not a checked-in path. Load credentials from a trusted secret manager without printing them. `OPERATOR_DATABASE_URL` is for a trusted import/review operator, not the deployed runtime. Do not leave that credential in the main Worker or CI.
+`PRIVATE_DIR` below means your external restricted directory; it is not a checked-in path. Load credentials from a trusted secret manager without printing them. `OPERATOR_DATABASE_URL` is for a trusted import/review operator, not the deployed runtime. Do not leave that credential in the main Worker, either Vercel project or CI. This SQL/operator runbook applies to both adapters: use [Cloudflare deployment](deployment.md) or [full Vercel setup](vercel-setup.md) / [español](vercel-setup-es.md) for platform-specific settings. Vercel private photos are unsupported/off.
 
 ## 1. Establish policy before importing
 
@@ -128,7 +128,7 @@ This checks the local shell's flags/configuration against a consistent DB snapsh
 **Before any external side effect:**
 
 - [ ] Synthetic/native proof and source scan for the exact candidate reviewed; unknowns recorded.
-- [ ] Correct Cloudflare/Neon resources, bindings, effective grants, private sender ingress and optional private R2 verified.
+- [ ] Correct hosting/Neon resources and effective grants verified: Cloudflare private service binding/optional private R2, or Vercel canonical main + bearer-authenticated sender with outside-root trace and production-only credentials; Vercel photos remain off.
 - [ ] Owner login/dashboard works; anonymous and ordinary attendee owner/photo denials verified.
 - [ ] Review version/counts/coverage, prior stock and allowlists verified privately; compatible rollback recorded.
 - [ ] Organizer explicitly authorizes real claims and separately authorizes real email; participant wording and privacy/retention policy reviewed.
@@ -192,8 +192,8 @@ A database cleanup transaction alone cannot atomically delete R2 objects or loca
 | Symptom | Safe check | Do not do |
 | --- | --- | --- |
 | `421 Invalid host` | Compare actual HTTPS origin with `PUBLIC_ORIGIN`; verify preview origin and routes. | Disable host validation or trust arbitrary `Host`. |
-| `503` on feedback | Check flag names, runtime/signing secrets, `FEEDBACK_RATE` binding and a first DB query with synthetic staging data. | Install the migration-owner URL on the Worker. |
-| Generic login message, no mail | Verify access row, exact private service binding, sender flags/role and sanitized provider acceptance metadata. | Infer delivery, disclose membership or dump link/token logs. |
+| `503` on feedback | Check flag names, runtime/signing secrets, Cloudflare `FEEDBACK_RATE` binding or Vercel adapter SQL limiter, and a first DB query with synthetic staging data. | Install the migration-owner URL on the Worker. |
+| Generic login message, no mail | Verify access row, exact Cloudflare service binding or Vercel sender origin/token, active sender flags/role and sanitized provider acceptance metadata. | Infer delivery, disclose membership or dump link/token logs. |
 | Sender timeout | Reconcile private provider attempt metadata and consumed/fenced token state. | Retry the same send blindly or delete the one-attempt fence. |
 | Saved text, failed photos | Retry the same submission/slot/content, then reconcile the private manifest. | Resubmit everything for another assignment or call originals sanitized. |
 | Benefit unavailable | Compare reviewed version/counts/coverage and actual flags; check temporary row locks before declaring no stock. | Reset assignments, turn off review gates or visit bearer URLs. |

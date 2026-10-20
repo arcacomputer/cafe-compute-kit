@@ -1,0 +1,8 @@
+{
+ "$schema":"https://openapi.vercel.sh/vercel.json",
+ "framework":null,
+ "buildCommand":"npm run build:vercel",
+ "outputDirectory":"vercel/empty-public",
+ "functions":{"api/main.mjs":{"maxDuration":60,"includeFiles":"vercel/generated/public-assets.json"}},
+ "routes":[{"src":"/(.*)","dest":"/api/main"}]
+}

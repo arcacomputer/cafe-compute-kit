@@ -11,7 +11,7 @@ node --version
 npm --version
 ```
 
-Use the Node version accepted by **both** root and app `engines` (the feedback app pins Node `22.22.2`). Inspect the package manifests and root lockfile before installing; do not work around an engine rejection with a forced install.
+Use the Node version accepted by **both** root and app `engines` (root/feedback accept `>=22.22.2 <23`; `22.22.2` is the exercised baseline). Inspect the package manifests and root lockfile before installing; do not work around an engine rejection with a forced install.
 
 ```bash
 # Dependency install only; not permission to deploy, import, send or release.
@@ -64,7 +64,7 @@ npm run preview
 
 The root preview opens on `http://127.0.0.1:4173` and intentionally refuses private APIs/login rather than simulating authentication. It is not the Worker runtime.
 
-For the real private flow, follow [deployment](deployment.md) in order: fresh Neon database and roles, canonical HTTPS origin, server-only secrets, optional private R2, private sender, dark deployment, owner bootstrap and reviewed imports/release. One event per deployment/database; no shared multi-tenant mode is implied.
+For the real private flow, choose [Cloudflare deployment](deployment.md) or [full Vercel setup](vercel-setup.md) ([español](vercel-setup-es.md)): fresh Neon database and roles, canonical HTTPS origins, server-only secrets, separate sender, dark deployment, owner bootstrap and reviewed imports/release. Optional private R2 is Cloudflare-only; Vercel private photos remain unsupported/off. One event per deployment/database; no shared multi-tenant mode is implied.
 
 Do not point local preview at existing live databases/buckets or install a real mail key to obtain a demo. The authenticated app uses HTTPS and Secure host-only cookies; ordinary HTTP static preview cannot prove sign-in. Use its disposable native/browser proof harness for authenticated local verification, never a public auth bypass.
 
@@ -86,7 +86,7 @@ Record only checks actually run, against the exact source/version. See the [root
 
 ## Next
 
-- [Deploy static-only or combined](deployment.md)
+- [Deploy on Cloudflare](deployment.md) · [Full Vercel](vercel-setup.md) · [Vercel static-only](vercel-static-setup.md)
 - [Import Luma check-ins, reconcile stock and review release](operators.md)
 - [Prepare event resources, slides and recap](event-checklist.md)
 - [Guía práctica en español](guia-es.md)

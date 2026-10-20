@@ -1,4 +1,4 @@
-import {readdir,readFile,writeFile,mkdir,rm} from 'node:fs/promises';
+import {readdir,readFile,writeFile,mkdir,rm,stat} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {spawnSync} from 'node:child_process';
@@ -7,7 +7,7 @@ import {publicAssetType} from './assets.mjs';
 
 // Read only the compiled tree, reject symlinks/unexpected files and omit the
 // generated login placeholders entirely. No repository-wide copying or env dump.
-export async function compileAssets(input) {
+export async function compileAssets(input,{maxAssetBytes=4*1024*1024,maxManifestBytes=32*1024*1024}={}) {
  const manifest={};
  async function collect(directory,prefix='') {
   for(const entry of await readdir(directory,{withFileTypes:true})){
@@ -17,7 +17,9 @@ export async function compileAssets(input) {
    if(name==='/_headers'||privatePageRoute(name))continue;
    const type=publicAssetType(name);
    if(!entry.isFile()||!type)throw Error(`Unexpected compiled asset: ${name}`);
+   if((await stat(path.join(directory,entry.name))).size>maxAssetBytes)throw Error(`Vercel public asset exceeds response budget: ${name}. Resize media or use the static-only deployment.`);
    manifest[name]={type,base64:(await readFile(path.join(directory,entry.name))).toString('base64')};
+   if(Buffer.byteLength(JSON.stringify(manifest))>maxManifestBytes)throw Error('Vercel compiled manifest exceeds bundle budget. Reduce public media or use the static-only deployment.');
   }
  }
  await collect(path.resolve(input));

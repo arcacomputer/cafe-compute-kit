@@ -5,7 +5,7 @@ Contribute through [the public repository](https://github.com/arcacomputer/cafe-
 ## Local workflow
 
 1. Read [getting started](getting-started.md), [architecture](architecture.md) and the root package scripts. Use the Node/package-manager versions declared by the checkout and the checked-in lockfile.
-2. Work in the owning subtree: `apps/event-site` for public content/build; `apps/feedback` for auth, feedback, private operations and its sender; `docs` for guides. Root integration owns workspace scripts, merge rules and Cloudflare configuration.
+2. Work in the owning subtree: `apps/event-site` for public content/build; `apps/feedback` for auth, feedback, private operations and its sender; `docs` for guides. Root integration owns workspace scripts, merge rules and Cloudflare configuration; `api/` and `vercel/` own the native Vercel adapters and separate sender project. Both platforms share private handlers/SQL; keep environment projections and authority separation intact.
 3. Use synthetic data and disposable local PostgreSQL only. Never copy a real event DB/Neon branch, roster, photo, code, login URL, environment file, export, operational log or private-repository history into a fixture.
 4. Add a regression for changed behavior before a fix when practical. Run the existing workspace checks listed in [getting started](getting-started.md#checks), including native PostgreSQL/browser checks for affected private flows. If prerequisites are absent, report that explicitly; skipped/mock tests do not prove the missing layer.
 5. Inspect the built public artifacts, not just the source. Confirm the feedback build exposes assets, not an authenticated form; the root build rejects collisions. Review `git diff --check` and the actual patch before opening a PR.

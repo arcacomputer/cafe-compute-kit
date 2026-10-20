@@ -1,8 +1,8 @@
-# Deployment walkthrough
+# Cloudflare deployment walkthrough
 
 Start with [getting started](getting-started.md). These steps are for **your own new event**. Provisioning, secret updates, uploads, domain changes, mail and real release are separate external side effects; execute each only after its checklist. No command belongs in an install hook.
 
-For a free-tier-first deployment, start with [free-tier setup](free-tier-setup.md): provider-assigned hostnames, photos off, explicit CPU/database/email quotas and no automatic paid upgrades. [Vercel Hobby](vercel-static-setup.md) is an eligible personal non-commercial **static-site-only** option, not a backend port.
+For a free-tier-first deployment, start with [free-tier setup](free-tier-setup.md): provider-assigned hostnames, photos off, explicit CPU/database/email quotas and no automatic paid upgrades. For native Vercel login/feedback/admin/codes use the [full Vercel guide](vercel-setup.md) ([español](vercel-setup-es.md)); for public pages only use the [static alternative](vercel-static-setup.md). Hobby eligibility and live-provider proof gates apply. The walkthrough below remains the Cloudflare path; the fresh Neon role model is shared.
 
 ## 1. Freeze the target
 
