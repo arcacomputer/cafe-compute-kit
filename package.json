@@ -5,10 +5,17 @@
   "description": "A bilingual community-event website and private feedback/benefit-distribution toolkit.",
   "type": "module",
   "license": "MIT",
-  "engines": {"node": ">=22.22.2 <23"},
-  "workspaces": ["apps/event-site", "apps/feedback"],
+  "engines": {
+    "node": ">=22.22.2 <23"
+  },
+  "workspaces": [
+    "apps/event-site",
+    "apps/feedback",
+    "vercel/sender-project"
+  ],
   "scripts": {
     "build": "node scripts/build.mjs",
+    "build:vercel": "node vercel/build.mjs",
     "test:root": "node --max-old-space-size=512 --test --test-concurrency=1 tests/*.test.mjs",
     "test:unit": "npm run test:root && npm run test:unit --workspaces --if-present",
     "test:postgres": "npm run test:postgres --workspace @cafe-compute-kit/feedback",
@@ -18,5 +25,14 @@
     "preview": "node scripts/preview.mjs",
     "deploy": "wrangler deploy --config wrangler.jsonc"
   },
-  "devDependencies": {"wrangler":"4.151.2", "playwright":"1.64.1", "axe-core":"4.14.0"}
+  "dependencies": {
+    "@vercel/functions": "3.10.1"
+  },
+  "devDependencies": {
+    "@vercel/build-utils": "14.22.0",
+    "@vercel/node": "25.0.0",
+    "axe-core": "4.14.0",
+    "playwright": "1.64.1",
+    "wrangler": "4.151.2"
+  }
 }

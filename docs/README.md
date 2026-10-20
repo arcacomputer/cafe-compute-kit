@@ -1,9 +1,10 @@
 # Guides
 
-Start with [Getting started](getting-started.md), then choose [deployment](deployment.md). For a practical Spanish path, use [Guía en español](guia-es.md).
+Start with [Getting started](getting-started.md), then choose [Cloudflare deployment](deployment.md) or [full Vercel deployment](vercel-setup.md). Spanish paths: [Cloudflare/general guide](guia-es.md) and [Vercel completo](vercel-setup-es.md).
 
 - [Free-tier setup](free-tier-setup.md): Cloudflare Static Assets, Workers + Neon + AgentMail, provider hostnames, explicit quotas and no automatic paid upgrades. Includes a Spanish summary.
-- [Vercel Hobby static-site setup](vercel-static-setup.md): exact build/output/header settings for eligible personal non-commercial sites; private feedback/admin remain on Cloudflare. Includes a Spanish summary.
+- [Full Vercel setup and operations](vercel-setup.md) · [Guía completa en español](vercel-setup-es.md): main + separate sender, production-only secrets/flags, Neon roles, owner bootstrap/release, canonical hosts, rollback and explicit provider-proof limits. Private photo uploads unsupported/off; no Blob yet.
+- [Vercel static-only alternative](vercel-static-setup.md): deliberate replacement of root config and exclusion of API sources; no backend credentials. Includes a Spanish summary. Hobby eligibility applies to either Vercel path.
 
 - [Architecture](architecture.md): static-only or authenticated; one event per deployment.
 - [Operator runbook](operators.md): Luma import, private inventory, release review, owner access, exports and retention.

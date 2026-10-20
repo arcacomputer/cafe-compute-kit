@@ -10,17 +10,23 @@ For a suspected vulnerability, do not file sensitive details publicly. Use the p
 
 | Boundary | Required control | Limit / operator responsibility |
 | --- | --- | --- |
-| Host and assets | Exact configured HTTPS `PUBLIC_ORIGIN`; Worker-first routing; public-only `ASSETS` directory. | An alternate hostname is not another supported app origin. `noindex` is not access control. |
+| Host and assets | Exact configured HTTPS `PUBLIC_ORIGIN`; Cloudflare Worker-first or Vercel function-before-filesystem routing; public-only asset directory/manifest. | An alternate hostname is not another supported app origin. `noindex` is not access control. |
 | Authentication | Hashed expiring tokens and sessions; POST consumption; Secure, HttpOnly, host-only SameSite cookie. | Anyone controlling an eligible mailbox or a valid bearer link can act as that user. Do not log links. |
 | Mutations | Session-derived identity, exact origin, CSRF and request limits. | Origin headers do not authenticate a direct client. Shared event Wi-Fi can hit limits; test capacity with synthetic traffic. |
 | Text admission | Receipt ownership and atomic database admission/quota function. | Network response loss is not proof of rollback. Reconcile/retry the same receipt; do not mint a new identity or assignment. |
 | Allocation | Benefit eligibility, reviewed version/counts, pool separation, row locks, unique recipient and exact stock values. | Bearer codes can be shared after reveal. No provider redemption API is verified by an assignment. |
 | Database | Separate migration owner, runtime, read-only admin and sender capability roles; restricted function execution and trusted search paths. | A credential with inherited owner rights defeats least privilege. Verify effective permissions, not just role names. |
-| Sender | Private service binding, fixed template/origin/path/language and DB-authorized one-attempt fence. | Broad AgentMail key stays only in the sender. Provider timeout may mean accepted mail; do not blindly resend. Accepted is not delivered. |
+| Sender | Cloudflare private service binding or Vercel separate HTTPS project with fixed origin, strong shared service token and no-follow redirects; fixed template/path/language and DB-authorized one-attempt fence. | Broad AgentMail key stays only in the sender. Provider timeout may mean accepted mail; do not blindly resend. Accepted is not delivered. |
 | Photos | Session/CSRF/ownership checks, bounded bytes and slots, private reads and bucket. | File signature checks do not decode images, strip EXIF/GPS or bound decoded pixel dimensions. |
 | Owner export | Server-side allowlist and private paginated export. | Raw text, photos and metadata require human review. An owner account is sensitive; protect its mailbox and local export files. |
 
-A main Worker compromise still exposes its runtime capabilities, private photo binding and admin read credential. Splitting credentials limits database authority; it does not sandbox one handler from another inside the same Worker. Restrict deployment access accordingly.
+A main Worker/function compromise still exposes its runtime capabilities and admin read credential, plus private photos where supported on Cloudflare. Splitting credentials limits database authority; it does not sandbox one handler from another inside the same Worker/function. Restrict deployment access accordingly.
+
+### Vercel deployment boundaries
+
+Follow [full Vercel setup](vercel-setup.md) / [español](vercel-setup-es.md). Keep live variables project-scoped to Production, never Preview/Development or team-wide. Main must not receive sender/provider/operator credentials; sender must not receive runtime/admin/auth/owner secrets. Explicit environment projections are not a sandbox against someone with deployment access. Sender ingress is public HTTP but bearer-authenticated, not a private Cloudflare binding; verify app-level unauthenticated refusal before DB/provider access and no Vercel SSO/redirect barrier on its authorized server-to-server leg. Verify actual routing/original URL, trusted platform IP and outside-root source traces separately from native proof.
+
+**Vercel private photo uploads are unsupported, not an opt-in feature.** No production Blob adapter exists. Keep `PHOTOS_ENABLED=false` and `PRIVATE_PHOTO_METADATA_ACK=false`; setting the first true without storage makes production fail closed with 503. The photo opt-in instructions below apply only to Cloudflare/R2. Public consent-cleared gallery assets are a separate reviewed build input.
 
 ## Photos: default off, private originals only
 
@@ -39,7 +45,7 @@ Before allowing real use, record privately the exact candidate/version and resul
 - Synthetic application flow: login confirmation, feedback, retry, claim, optional photos and owner export; no live mail or real stock in tests.
 - Native disposable PostgreSQL independent-session admission, token and claim races; rollback, capacity/exhaustion, stable retries and effective runtime/admin/sender grants.
 - Build/artifact scan: no private inputs, authenticated static form, secrets, live identifiers or unlicensed assets; no install-triggered deploy/send/release.
-- Operator deployment: correct account and resources; no shared production preview bindings; actual runtime first database query; private bucket/public URL settings; sender has no public ingress; anonymous and ordinary attendee admin/photo denials.
+- Operator deployment: correct account and resources; no shared production preview bindings; actual runtime first database query; private bucket/public URL settings; Cloudflare sender has no public ingress or Vercel sender has authenticated-only ingress with correct canonical origin/token and no-follow routing; anonymous and ordinary attendee admin/photo denials.
 - Both locales and mobile/keyboard paths, preserved answers, optional consent and complete/incomplete export behavior.
 
 Record unknowns as unknown. A passing isolated suite is not proof of the operator's R2 configuration or email delivery, and an HTTP 200 is not authenticated-flow proof. Re-check after changing code, flags, grants, provider settings or domains.

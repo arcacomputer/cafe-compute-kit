@@ -1,0 +1,9 @@
+{
+ "name":"@cafe-compute-kit/vercel-sender",
+ "version":"0.1.0",
+ "private":true,
+ "type":"module",
+ "license":"MIT",
+ "engines":{"node":">=22.22.2 <23"},
+ "dependencies":{"@cafe-compute-kit/feedback":"0.1.0"}
+}

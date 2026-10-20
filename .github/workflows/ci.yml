@@ -36,12 +36,22 @@ jobs:
           node-version: '22.22.2'
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - run: npm run check:source
       - run: npm run build
+      - run: npm run build:vercel
+      - name: Actual Vercel Node builder, traced files and native SDK request handling
+        run: node scripts/proof-vercel-package.mjs
       - run: npm run test:unit
       - run: npm run test:postgres
+      - name: Vercel cross-instance limiter with independent PostgreSQL sessions
+        run: node apps/feedback/scripts/proof-vercel-postgres.mjs
+      - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - name: Native Vercel adapter, authenticated sender and PostgreSQL browser flow
+        run: npm run test:browser --workspace @cafe-compute-kit/feedback
+        env:
+          PROOF_PLATFORM: vercel
+          PROOF_OUTPUT_DIR: ${{ github.workspace }}/.proof/vercel-feedback
       - run: npx wrangler deploy --dry-run --outdir .proof/worker-bundle
       - run: npm audit --omit=dev
       - uses: actions/upload-artifact@v4
@@ -55,6 +65,9 @@ jobs:
             .proof/worker/results.json
             apps/feedback/.proof/*.png
             apps/feedback/.proof/browser-results.json
+            .proof/vercel-feedback/*.png
+            .proof/vercel-feedback/browser-results.json
+            .proof/vercel-package/results.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7

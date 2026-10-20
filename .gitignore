@@ -25,3 +25,7 @@ exports/
 *.backup
 *.tar.gz
 .DS_Store
+.vercel/
+vercel/generated/
+vercel/empty-public/
+vercel/sender-project/public/

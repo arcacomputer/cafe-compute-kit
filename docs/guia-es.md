@@ -1,6 +1,6 @@
 # Guía práctica en español
 
-**Planes gratuitos:** empieza por [Cloudflare Free + Neon Free + AgentMail Free](free-tier-setup.md#en-español), sin fotos, sin dominio comprado y con cuotas explícitas. [Vercel Hobby](vercel-static-setup.md#en-español) es solo para el sitio público personal no comercial; no asumas que un evento patrocinado está permitido ni que el backend de Cloudflare funciona allí.
+**Planes gratuitos:** empieza por [Cloudflare Free + Neon Free + AgentMail Free](free-tier-setup.md#en-español), sin fotos, sin dominio comprado y con cuotas explícitas. Para Vercel sigue la [guía completa de login, feedback, admin y códigos](vercel-setup-es.md), con proyecto principal + sender separado, Neon y fotos desactivadas, o la [alternativa solo estática](vercel-static-setup.md#en-español). Hobby exige uso personal no comercial en ambas: un evento patrocinado no califica automáticamente. Las secciones Cloudflare de esta guía no son instrucciones Vercel.
 
 Un kit independiente, no un producto oficial ni una promesa de beneficios. El código es MIT; eso **no** autoriza logos, marcas ni fotos de terceros. Trabajo asistido por IA, con custodia humana de **Luis Felipe Abarca**: [arca.computer](https://arca.computer/) · [felirami.com](https://felirami.com/). Los repositorios y registros originales siguen privados; no se incluyen asistentes, respuestas, fotos, testimonios ni códigos reales.
 
@@ -12,7 +12,7 @@ Las exportaciones privadas verifican tipo, tamaño y SHA-256 de la identidad inm
 - **Combinado:** el build raíz une ambos `dist/` y Cloudflare ejecuta `apps/feedback/worker.js` con `ASSETS` apuntando al `dist/` raíz. Formularios privados renderizados por el Worker, nunca HTML autenticado público.
 - **Solo feedback:** usa su build y configuración propios.
 
-La arquitectura es Cloudflare Workers + Neon PostgreSQL + R2 privado opcional + un sender AgentMail privado separado. No requiere Supabase ni cambiar de framework. **Un evento, un despliegue y una base nueva aislada.** Staging y real van separados; no es un SaaS multi-tenant. Una rama Neon copiada de un evento real no es un entorno sintético.
+La ruta Cloudflare es Workers + Neon PostgreSQL + R2 privado opcional + sender AgentMail privado separado. La [ruta Vercel](vercel-setup-es.md) comparte handlers/SQL mediante Functions y sender HTTPS autenticado separado; no necesita Cloudflare para login/feedback/admin/códigos sin fotos. No existe adaptador production Blob: las fotos privadas deben permanecer apagadas allí. No requiere Supabase ni cambiar de framework. **Un evento, un despliegue y una base nueva aislada.** Staging y real van separados; no es un SaaS multi-tenant. Una rama Neon copiada de un evento real no es un entorno sintético.
 
 ## 2. Instalación y vista previa sin efectos externos
 
@@ -26,7 +26,7 @@ npm run build --workspace @cafe-compute-kit/event-site
 npm run preview -- --dir apps/event-site/dist
 ```
 
-Usa el Node aceptado por todos los paquetes; feedback fija `22.22.2`. Revisa manifests/lockfile; si falta el lockfile o falla engines, no fuerces la instalación. El preview solo escucha en loopback. Abre `http://127.0.0.1:4173/` y `/en/`; termina con Ctrl-C. No sirvas el repositorio, uses túneles públicos ni cargues secretos reales. Este preview estático HTTP **no prueba** autenticación/cookies HTTPS.
+Usa el Node aceptado por todos los paquetes; raíz/feedback aceptan `>=22.22.2 <23`, con `22.22.2` como base ejercitada. Revisa manifests/lockfile; si falta el lockfile o falla engines, no fuerces la instalación. El preview solo escucha en loopback. Abre `http://127.0.0.1:4173/` y `/en/`; termina con Ctrl-C. No sirvas el repositorio, uses túneles públicos ni cargues secretos reales. Este preview estático HTTP **no prueba** autenticación/cookies HTTPS.
 
 Personaliza `config/event.example.json` con información pública autorizada en ambos idiomas. Conserva TBA/null en fechas o lugares no confirmados; no inventes resultados, cifras ni testimonios. Confirma términos antes de agregar beneficios. La galería solo usa derivados públicos revisados con permisos y consentimiento; nunca originales privados. Ajusta aviso de privacidad y contacto real antes de recopilar datos.
 

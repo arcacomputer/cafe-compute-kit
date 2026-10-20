@@ -7,14 +7,29 @@ if(!process.env.PROOF_DATABASE_URL||process.env.PROOF_DISPOSABLE!=='yes')throw E
 const {chromium}=await import('playwright');
 const {default:AxeBuilder}=await import('@axe-core/playwright');
 const {fixture}=await import('../test-support/postgres.mjs');
-const {proofServer}=await import('../test-support/server.mjs');
+const platform=process.env.PROOF_PLATFORM||'cloudflare';
+if(!['cloudflare','vercel'].includes(platform))throw Error('Unsupported proof platform');
+const {proofServer}=await import(platform==='vercel'?'../test-support/vercel-server.mjs':'../test-support/server.mjs');
 const {hash}=await import('../auth.js');
 const f=await fixture();let server,browser;const report=[],external=[],errors=[];
 const out=resolve(process.env.PROOF_OUTPUT_DIR||'.proof');await mkdir(out,{recursive:true});
 // App fetch must never reach any external mail, Neon HTTP or object-storage API.
 globalThis.fetch=()=>{throw Error('External HTTP forbidden in browser proof server');};
 try{
- server=await proofServer(f);await f.stock(16);const owner=await f.person({email:'owner@example.test',claim:false});
+ // The production sender deliberately refuses rows marked synthetic. Exercise
+ // its actual authorization and release policy with disposable dummy identities
+ // and non-redeemable SYNTHETIC_ values, never by weakening cc_authorize_mail.
+ const nativeSender=platform==='vercel';
+ if(nativeSender)f.env.REAL_CREDIT_DISTRIBUTION='true';
+ server=await proofServer(f);await f.stock(16);const owner=await f.person({email:'owner@example.test',claim:false,synthetic:!nativeSender});
+ const nativeGuests=[];
+ if(nativeSender){
+  for(let i=0;i<4;i++)nativeGuests.push(await f.person({synthetic:false}));
+  await f.operator.query('UPDATE cc_credit_codes SET synthetic=false');
+  const stock=(await f.operator.query('SELECT link FROM cc_credit_codes')).rows;
+  assert.equal(stock.length,16);assert.ok(stock.every(row=>row.link.startsWith('SYNTHETIC_')),'Only non-redeemable dummy inventory is permitted');
+  await f.operator.query("UPDATE cc_release SET roster_reviewed=true,inventory_reviewed=true,prior_assignments_reviewed=true,expected_recipients=4,expected_inventory=16,reviewed_version=version,review_note='Disposable browser proof; dummy identities and non-redeemable values only' WHERE id=1");
+ }
  browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
  let caseNo=0;
  async function context(){const c=await browser.newContext({ignoreHTTPSErrors:true});await c.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin!==server.origin){external.push(u.origin+u.pathname);return route.abort();}return route.continue();});return c;}
@@ -34,7 +49,7 @@ try{
  for(const lang of ['en','es'])for(const width of [390,1280]){
   caseNo++;server.setIP('192.0.2.'+(caseNo+10));const c=await context(),page=await c.newPage();page.on('pageerror',e=>errors.push(e.message));await page.setViewportSize({width,height:844});
   if(caseNo===1){await page.goto(server.origin+'/en/feedback/sign-in');await page.locator('#consume').click();await page.waitForFunction(()=>document.querySelector('#auth-status').textContent.includes('Open the link'));await page.goto(server.origin+'/en/feedback/sign-in#synthetic-invalid');await page.waitForFunction(()=>location.hash==='');await page.locator('#consume').click();await page.waitForFunction(()=>document.querySelector('#consume').hidden===true);assert.match(await page.locator('#auth-status').innerText(),/expired/);}
-  const guest=await f.person(),base=await signIn(page,guest,lang);
+  const guest=nativeSender?nativeGuests[caseNo-1]:await f.person(),base=await signIn(page,guest,lang);
   await capture(page,`form-${lang}-${width}`);assert.equal(await page.locator('[name=photoConsent]').isChecked(),false);assert.equal(await page.locator('#photos').isDisabled(),true);
   await page.locator('#name').fill('Synthetic Guest');await page.locator('#affiliation').fill('Independent');await page.locator('#role').fill('Developer');await page.locator('#next').click();
   await page.locator('#feedback').fill('The session was disappointing; less pitching please.');await page.locator('#improvements').fill('N/A');await page.locator('#next').click();
@@ -66,6 +81,7 @@ try{
  const ownerRow=(await f.operator.query('SELECT * FROM cc_recipients WHERE id=$1',[owner.id])).rows[0];assert.equal(ownerRow.claim_eligible,false);assert.equal(ownerRow.checked_in_at,null);
  await page.goto(server.origin+'/en/feedback/credit');await page.locator('#claim').click();await page.waitForFunction(()=>document.querySelector('#auth-status').dataset.state==='error');assert.equal((await f.operator.query('SELECT count(*)::int n FROM cc_credit_codes WHERE recipient_id=$1',[owner.id])).rows[0].n,0);
  await c.close();assert.deepEqual(external,[]);assert.deepEqual(errors,[]);
- const result={passed:true,externalRequests:external,uncaughtBrowserErrors:errors,actualWorkerFetch:true,noSendOutbox:true,nativePostgres:true,ownerDashboardExport:true,report,accessibilityNote:'Incomplete axe checks are reported for manual review, not claimed as automated passes.'};
+ if(platform==='vercel'){assert.ok(server.calls.provider>=9);assert.equal(server.calls.denied,1);}
+ const result={passed:true,platform,actualVercelAdapter:platform==='vercel',authenticatedSeparateSender:platform==='vercel',fixturePolicy:nativeSender?'Production non-synthetic authorization and reviewed-release policy with disposable dummy identities and non-redeemable SYNTHETIC_ inventory':'Synthetic-row policy',externalRequests:external,uncaughtBrowserErrors:errors,actualWorkerFetch:true,noSendOutbox:true,nativePostgres:true,ownerDashboardExport:true,report,accessibilityNote:'Incomplete axe checks are reported for manual review, not claimed as automated passes.'};
  await writeFile(resolve(out,'browser-results.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
 }finally{await browser?.close();await server?.close();await f.close();}
