@@ -49,7 +49,12 @@ jobs:
         with:
           name: synthetic-proof
           path: |
-            .proof/
-            apps/feedback/.proof/
-          if-no-files-found: ignore
+            .proof/event-site/*.png
+            .proof/event-site/*.pdf
+            .proof/event-site/results.json
+            .proof/worker/results.json
+            apps/feedback/.proof/*.png
+            apps/feedback/.proof/browser-results.json
+          include-hidden-files: true
+          if-no-files-found: error
           retention-days: 7
