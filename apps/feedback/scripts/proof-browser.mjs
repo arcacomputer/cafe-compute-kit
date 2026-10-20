@@ -7,7 +7,9 @@ if(!process.env.PROOF_DATABASE_URL||process.env.PROOF_DISPOSABLE!=='yes')throw E
 const {chromium}=await import('playwright');
 const {default:AxeBuilder}=await import('@axe-core/playwright');
 const {fixture}=await import('../test-support/postgres.mjs');
-const {proofServer}=await import('../test-support/server.mjs');
+const platform=process.env.PROOF_PLATFORM||'cloudflare';
+if(!['cloudflare','vercel'].includes(platform))throw Error('Unsupported proof platform');
+const {proofServer}=await import(platform==='vercel'?'../test-support/vercel-server.mjs':'../test-support/server.mjs');
 const {hash}=await import('../auth.js');
 const f=await fixture();let server,browser;const report=[],external=[],errors=[];
 const out=resolve(process.env.PROOF_OUTPUT_DIR||'.proof');await mkdir(out,{recursive:true});
@@ -66,6 +68,7 @@ try{
  const ownerRow=(await f.operator.query('SELECT * FROM cc_recipients WHERE id=$1',[owner.id])).rows[0];assert.equal(ownerRow.claim_eligible,false);assert.equal(ownerRow.checked_in_at,null);
  await page.goto(server.origin+'/en/feedback/credit');await page.locator('#claim').click();await page.waitForFunction(()=>document.querySelector('#auth-status').dataset.state==='error');assert.equal((await f.operator.query('SELECT count(*)::int n FROM cc_credit_codes WHERE recipient_id=$1',[owner.id])).rows[0].n,0);
  await c.close();assert.deepEqual(external,[]);assert.deepEqual(errors,[]);
- const result={passed:true,externalRequests:external,uncaughtBrowserErrors:errors,actualWorkerFetch:true,noSendOutbox:true,nativePostgres:true,ownerDashboardExport:true,report,accessibilityNote:'Incomplete axe checks are reported for manual review, not claimed as automated passes.'};
+ if(platform==='vercel'){assert.ok(server.calls.provider>=9);assert.equal(server.calls.denied,1);}
+ const result={passed:true,platform,actualVercelAdapter:platform==='vercel',authenticatedSeparateSender:platform==='vercel',externalRequests:external,uncaughtBrowserErrors:errors,actualWorkerFetch:true,noSendOutbox:true,nativePostgres:true,ownerDashboardExport:true,report,accessibilityNote:'Incomplete axe checks are reported for manual review, not claimed as automated passes.'};
  await writeFile(resolve(out,'browser-results.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
 }finally{await browser?.close();await server?.close();await f.close();}
