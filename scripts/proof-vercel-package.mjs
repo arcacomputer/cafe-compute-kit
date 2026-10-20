@@ -4,6 +4,7 @@ import path from 'node:path';
 import {createRequire} from 'node:module';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
+async function main(){
 const require=createRequire(import.meta.url),sdk=require('@vercel/node'),utils=require('@vercel/build-utils');
 const root=fileURLToPath(new URL('../',import.meta.url));
 const files=await utils.glob('**',{cwd:root,ignore:['node_modules/**','.git/**','.proof/**','.vercel/**','**/node_modules/**']});
@@ -32,3 +33,5 @@ for(const project of endpoints){
  }finally{await server?.shutdown();}
 }
 await mkdir(path.join(root,'.proof/vercel-package'),{recursive:true});await writeFile(path.join(root,'.proof/vercel-package/results.json'),JSON.stringify({passed:true,providerDeployment:false,report},null,2));console.log(JSON.stringify({passed:true,providerDeployment:false,report},null,2));
+}
+main().catch(error=>{console.error(error?.stack||String(error));process.exitCode=1;});

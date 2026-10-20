@@ -36,7 +36,6 @@ jobs:
           node-version: '22.22.2'
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - run: npm run check:source
       - run: npm run build
       - run: npm run build:vercel
@@ -46,6 +45,7 @@ jobs:
       - run: npm run test:postgres
       - name: Vercel cross-instance limiter with independent PostgreSQL sessions
         run: node apps/feedback/scripts/proof-vercel-postgres.mjs
+      - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - name: Native Vercel adapter, authenticated sender and PostgreSQL browser flow
         run: npm run test:browser --workspace @cafe-compute-kit/feedback
