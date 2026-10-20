@@ -2,7 +2,7 @@ import {isIP} from 'node:net';
 import worker from '../apps/feedback/worker.js';
 import {getConfig} from '../apps/feedback/config.js';
 import {reply} from '../apps/feedback/auth.js';
-import {projectMainEnv} from './environment.mjs';
+import {projectMainEnv,matchesHost} from './environment.mjs';
 import {createFeedbackRate} from './rate.mjs';
 import {createMagicMailer} from './mailer-client.mjs';
 
@@ -24,7 +24,7 @@ export function createMain({env:source={},assets,ipAddress,waitUntil,database,ad
    if(invalidMailer)return reply({error:'Unavailable'},503);
    if(env.PHOTOS_ENABLED==='true'&&!storage)return reply({error:'Private photo storage is not configured for Vercel'},503);
    const url=new URL(request.url),config=getConfig(env);
-   if(url.origin!==config.origin||request.headers.has('Host')&&request.headers.get('Host')!==url.host)return reply({error:'Invalid host'},421);
+   if(url.origin!==config.origin||!matchesHost(request,url))return reply({error:'Invalid host'},421);
    const ip=ipAddress(request);
    if(typeof ip!=='string'||ip.includes('%')||!isIP(ip)||typeof retain!=='function')return reply({error:'Unavailable'},503);
    const headers=new Headers(request.headers);

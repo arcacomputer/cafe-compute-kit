@@ -9,3 +9,6 @@ export function httpsOrigin(value) {
  return url.origin;
 }
 export const validServiceToken=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
+// Only the literal canonical authority and its explicit HTTPS default port
+// are equivalent. Do not parse caller authority as an origin or trust proxies.
+export const matchesHost=(request,url)=>!request.headers.has('Host')||request.headers.get('Host')===url.host||(url.protocol==='https:'&&!url.port&&request.headers.get('Host')===url.hostname+':443');

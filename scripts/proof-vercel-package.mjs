@@ -11,9 +11,10 @@ const files=await utils.glob('**',{cwd:root,ignore:['node_modules/**','.git/**',
 const report=[];
 const endpoints=[{name:'main',entrypoint:'api/main.mjs',workPath:root,origin:'https://kit-proof.example.invalid',expected:200},{name:'sender',entrypoint:'api/magic.mjs',workPath:path.join(root,'vercel/sender-project'),origin:'https://sender-proof.example.invalid',expected:401}];
 // The SDK dev protocol forwards x-forwarded-host to its inner Node server.
-// Supply the same canonical metadata as the official CLI; this is not proof
+// Its node-to-Web bridge derives HTTPS only from an explicit :443 authority,
+// not x-forwarded-proto. This is local SDK protocol metadata, not evidence
 // that managed Vercel overwrites caller headers (the live acceptance gate).
-function request(port,origin,pathname){return new Promise((done,reject)=>{const r=http.request({host:'127.0.0.1',port,path:pathname,headers:{host:new URL(origin).host,'x-forwarded-host':new URL(origin).host,'x-forwarded-proto':'https','x-real-ip':'192.0.2.99'}},response=>{const chunks=[];response.on('data',x=>chunks.push(x));response.on('end',()=>done({status:response.statusCode,body:Buffer.concat(chunks).toString()}));});r.on('error',reject);r.end();});}
+function request(port,origin,pathname){return new Promise((done,reject)=>{const authority=new URL(origin).hostname+':443';const r=http.request({host:'127.0.0.1',port,path:pathname,headers:{host:authority,'x-forwarded-host':authority,'x-forwarded-proto':'https','x-real-ip':'192.0.2.99'}},response=>{const chunks=[];response.on('data',x=>chunks.push(x));response.on('end',()=>done({status:response.statusCode,body:Buffer.concat(chunks).toString()}));});r.on('error',reject);r.end();});}
 for(const project of endpoints){
  const config=JSON.parse(await readFile(path.join(project.workPath,'vercel.json'),'utf8'));
  // Skip only the redundant dependency install: npm ci already installed the
