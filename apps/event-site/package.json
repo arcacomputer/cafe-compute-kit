@@ -1,0 +1,15 @@
+{
+  "name": "@cafe-compute-kit/event-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A dependency-free bilingual public event field guide: site, resources, slides and consent-aware recap templates.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/preview.mjs",
+    "test:unit": "node --test --test-concurrency=1 test/*.test.mjs"
+  },
+  "files": ["src/", "scripts/", "public/", "test/", "README.md", "DESIGN.md", "wrangler.jsonc"]
+}

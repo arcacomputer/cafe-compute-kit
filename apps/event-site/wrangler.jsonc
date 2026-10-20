@@ -1,0 +1,13 @@
+{
+  // Static-only deployment. No Worker code, secrets, database, account IDs or routes.
+  "name": "cafe-compute-kit-example-site",
+  "compatibility_date": "2026-10-01",
+  // Deliberately not public until the operator chooses an exposure method.
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

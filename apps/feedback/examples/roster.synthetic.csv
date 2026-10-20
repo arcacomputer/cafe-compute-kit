@@ -1,0 +1,3 @@
+Email,Name,Guest ID,Status,Checked In At
+synthetic.guest@example.test,Synthetic Guest,synthetic-guest-1,approved,2026-01-02T10:00:00Z
+registered.only@example.test,Registration Only,synthetic-guest-2,approved,

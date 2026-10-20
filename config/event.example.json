@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "status": "example",
+  "title": { "es": "Evento de ejemplo / configurar antes de publicar", "en": "Example event / configure before publishing" },
+  "location": { "es": "Tu comunidad · lugar por anunciar", "en": "Your community · location TBA" },
+  "audience": { "es": "Para personas curiosas que quieren construir con IA", "en": "For curious people who want to build with AI" },
+  "intro": { "es": "Trae una pregunta pequeña, comparte una mesa y aprende haciendo. Esta es una plantilla: no anuncia un encuentro confirmado.", "en": "Bring a small question, share a table and learn by making. This is a template, not an announcement of a confirmed meetup." },
+  "date": { "certainty": "tba", "start": null, "timezone": null },
+  "venue": null,
+  "rsvpUrl": null,
+  "feedbackUrl": "/feedback/",
+  "privacyUrl": "/privacy/",
+  "contactUrl": null,
+  "resources": [
+    { "label": { "es": "Inicio rápido oficial de Cerebras", "en": "Official Cerebras quickstart" }, "url": "https://inference-docs.cerebras.ai/quickstart" },
+    { "label": { "es": "Catálogo oficial de modelos", "en": "Official model catalog" }, "url": "https://inference-docs.cerebras.ai/models/overview" },
+    { "label": { "es": "Referencia de chat completions", "en": "Chat completions reference" }, "url": "https://inference-docs.cerebras.ai/api-reference/chat-completions" }
+  ],
+  "social": [],
+  "benefits": [],
+  "preparation": [
+    { "title": { "es": "Un equipo y una idea", "en": "A laptop and an idea" }, "body": { "es": "Recomendamos traer cargador, un editor y algo pequeño que quieras probar. Confirma los requisitos con la organización.", "en": "We suggest a charger, an editor and something small you want to try. Confirm requirements with the organizer." } },
+    { "title": { "es": "Tus claves se quedan contigo", "en": "Your keys stay with you" }, "body": { "es": "Nunca compartas API keys en un chat, formulario del evento o repositorio. Usa variables de entorno solo en tu equipo o servidor.", "en": "Never share API keys in a chat, event form or repository. Use environment variables only on your own machine or server." } },
+    { "title": { "es": "Primero, las personas", "en": "People first" }, "body": { "es": "Pregunta antes de fotografiar o grabar. Consulta accesibilidad y condiciones de registro antes de viajar.", "en": "Ask before photographing or recording. Check accessibility and registration conditions before travelling." } }
+  ],
+  "slides": [
+    { "title": { "es": "Una mesa. Una pregunta. Un primer paso.", "en": "One table. One question. One first step." }, "body": { "es": "Bienvenida a un espacio para aprender haciendo. Personaliza esta presentación antes de usarla en un encuentro.", "en": "Welcome to a space for learning by making. Customize this presentation before using it at a meetup." }, "notes": { "es": "Presenta al equipo, confirma el horario y explica cómo pedir ayuda. No anuncies beneficios sin confirmar.", "en": "Introduce the team, confirm the schedule and explain how to ask for help. Do not announce unconfirmed benefits." } },
+    { "title": { "es": "Elige algo que puedas terminar", "en": "Choose something you can finish" }, "body": { "es": "Una pregunta útil. Una entrada pequeña. Una respuesta que puedas revisar. Empieza sin datos personales.", "en": "One useful question. One small input. An answer you can review. Start without personal data." }, "notes": { "es": "Invita a trabajar en parejas. Es una sugerencia, no una agenda confirmada.", "en": "Invite people to pair up. This is a suggestion, not a confirmed agenda." } },
+    { "title": { "es": "Tu primera solicitud, con cuidado", "en": "Your first request, with care" }, "body": { "es": "Abre los recursos. Configura tu clave localmente y elige un MODEL_ID del catálogo vigente. Revisa límites y precios antes de ejecutar.", "en": "Open the resources. Set your key locally and choose a MODEL_ID from the current catalog. Check limits and pricing before running." }, "notes": { "es": "El ejemplo fue contrastado con documentación, no ejecutado con credenciales. No pegues claves en la pantalla compartida.", "en": "The example was checked against docs, not run with credentials. Do not paste keys on a shared screen." } },
+    { "title": { "es": "Comparte lo que aprendiste", "en": "Share what you learned" }, "body": { "es": "Muestra una decisión, un error o una pregunta abierta. Pide permiso antes de publicar trabajo ajeno. El feedback es privado en su aplicación separada.", "en": "Show a decision, a mistake or an open question. Ask permission before publishing someone else’s work. Feedback is private in its separate app." }, "notes": { "es": "Confirma el enlace de feedback y los siguientes pasos. Un beneficio asignado no equivale a un beneficio canjeado.", "en": "Confirm the feedback link and next steps. An assigned benefit is not a redeemed benefit." } }
+  ],
+  "recap": { "summary": null, "takeaways": [], "nextSteps": [] },
+  "gallery": [],
+  "privacy": {
+    "es": "Esta plantilla estática no incluye analítica, cookies de seguimiento ni formularios. El alojamiento y los enlaces externos pueden tener sus propias políticas. La aplicación de feedback es independiente: revisa su aviso antes de enviar datos. Antes de publicar, configura una vía de contacto y adapta este aviso a tu despliegue.",
+    "en": "This static template includes no analytics, tracking cookies or forms. Hosting and external links may have their own policies. The feedback application is separate: review its notice before submitting data. Before publishing, configure a contact route and adapt this notice to your deployment."
+  }
+}

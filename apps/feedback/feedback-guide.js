@@ -1,0 +1,6 @@
+import { escapeHTML as esc } from './config.js';
+export function feedbackGuide(es,compact=false,config={}) {
+ const title=es?'Antes de empezar':'Before you start';
+ const content=`<p>${esc(config.benefit||'Private sponsor benefit / Beneficio privado del patrocinador')}</p><p>${es?'Las críticas son bienvenidas. N/A es válido si no cambiarías nada. Las preguntas, temas, fotos y su autorización de publicación son opcionales.':'Critical feedback is welcome. N/A is valid if you would change nothing. Questions, topics, photos and permission to publish are optional.'}</p><p>${es?'El equipo organizador revisa las respuestas de forma privada. No hay reenvíos automáticos ni garantía de respuesta del patrocinador. Una asignación no confirma el canje.':'Organizers review responses privately. There is no automatic forwarding or guaranteed sponsor reply. Assignment does not confirm redemption.'}</p>`;
+ return `<section id="before-start" class="before-start" aria-labelledby="before-start-title"><h2 id="before-start-title">${title}</h2>${compact?`<details class="guide-details"><summary>${es?'Sobre el beneficio, fotos y preguntas':'About the benefit, photos and questions'}</summary>${content}</details>`:content}</section>`;
+}

@@ -1,0 +1,22 @@
+{
+  "name": "cafe-compute-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A bilingual community-event website and private feedback/benefit-distribution toolkit.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {"node": ">=22.22.2 <23"},
+  "workspaces": ["apps/event-site", "apps/feedback"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test:root": "node --max-old-space-size=512 --test --test-concurrency=1 tests/*.test.mjs",
+    "test:unit": "npm run test:root && npm run test:unit --workspaces --if-present",
+    "test:postgres": "npm run test:postgres --workspace @cafe-compute-kit/feedback",
+    "test:worker": "node scripts/proof-worker.mjs",
+    "test:browser": "npm run test:worker && npm run test:browser --workspace @cafe-compute-kit/feedback",
+    "check:source": "node scripts/check-source.mjs",
+    "preview": "node scripts/preview.mjs",
+    "deploy": "wrangler deploy --config wrangler.jsonc"
+  },
+  "devDependencies": {"wrangler":"4.151.2", "playwright":"1.64.1", "axe-core":"4.14.0"}
+}

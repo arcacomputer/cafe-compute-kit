@@ -1,0 +1,7 @@
+{
+  "email": "Email",
+  "name": "Name",
+  "guestId": "Guest ID",
+  "status": "Status",
+  "checkedInAt": "Checked In At"
+}

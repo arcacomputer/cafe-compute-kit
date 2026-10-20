@@ -1,0 +1,8 @@
+# Private local file: copy to .dev.vars, never commit the result.
+# Main Worker: unique cc_runtime login and read-only cc_admin login.
+DATABASE_URL="postgresql://runtime_user:REPLACE@YOUR_NEON_HOST/event_database?sslmode=require"
+FEEDBACK_ADMIN_DATABASE_URL="postgresql://admin_user:REPLACE@YOUR_NEON_HOST/event_database?sslmode=require"
+AUTH_SECRET="REPLACE_WITH_32_RANDOM_BYTES_OR_MORE"
+FEEDBACK_SIGNING_KEY="REPLACE_WITH_A_DIFFERENT_32_RANDOM_BYTES_OR_MORE"
+OWNER_EMAILS="organizer@example.invalid"
+# NEVER put AGENTMAIL_SEND_KEY or an operator/owner DB credential in the public Worker.

@@ -1,0 +1,55 @@
+name: Verify toolkit
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: proof_operator
+          POSTGRES_DB: cc_proof_ci
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U proof_operator -d cc_proof_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PROOF_DATABASE_URL: postgresql://proof_operator@127.0.0.1:5432/cc_proof_ci
+      PROOF_DISPOSABLE: 'yes'
+      WRANGLER_SEND_METRICS: 'false'
+      NODE_OPTIONS: --max-old-space-size=1024
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.2'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check:source
+      - run: npm run build
+      - run: npm run test:unit
+      - run: npm run test:postgres
+      - run: npm run test:browser
+      - run: npx wrangler deploy --dry-run --outdir .proof/worker-bundle
+      - run: npm audit --omit=dev
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: synthetic-proof
+          path: |
+            .proof/
+            apps/feedback/.proof/
+          if-no-files-found: ignore
+          retention-days: 7

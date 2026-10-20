@@ -1,0 +1,22 @@
+{
+ "name":"@cafe-compute-kit/feedback","version":"0.1.0","private":true,"type":"module","license":"MIT","engines":{"node":"22.22.2"},
+ "scripts":{
+  "build":"node scripts/build.mjs",
+  "test":"npm run test:unit",
+  "test:unit":"node --test --test-concurrency=1 *.test.mjs",
+  "test:postgres":"node scripts/proof-postgres.mjs",
+  "test:browser":"node scripts/proof-browser.mjs",
+  "test:sql":"npm run test:postgres",
+  "proof":"node scripts/proof.mjs",
+  "dev":"wrangler dev --ip 127.0.0.1",
+  "import:roster":"node scripts/import-roster.mjs",
+  "import:inventory":"node scripts/import-inventory.mjs",
+  "bootstrap:owner":"node scripts/bootstrap-owner.mjs",
+  "review:release":"node scripts/review-release.mjs",
+  "preflight":"node scripts/preflight.mjs",
+  "cleanup":"node scripts/cleanup.mjs",
+  "export:private":"node scripts/export-private.mjs"
+ },
+ "dependencies":{"@neondatabase/serverless":"1.0.2","pg":"8.16.3"},
+ "devDependencies":{"wrangler":"4.151.2","playwright":"1.64.1","@axe-core/playwright":"4.14.0"}
+}

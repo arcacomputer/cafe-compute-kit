@@ -1,0 +1,5 @@
+# Sender ONLY, separate from main .dev.vars.
+DATABASE_URL="postgresql://sender_user:REPLACE@YOUR_NEON_HOST/event_database?sslmode=require"
+AGENTMAIL_SEND_KEY="REPLACE_WITH_PRIVATE_PROVIDER_CREDENTIAL"
+APPROVED_INBOX="approved-sender@example.invalid"
+REPLY_TO="organizer@example.invalid"
