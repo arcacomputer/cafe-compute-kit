@@ -18,7 +18,11 @@ for(const project of endpoints){
  const functions={...config.functions,[project.entrypoint]:{...config.functions?.[project.entrypoint],installCommand:''}};
  const relativePrefix=path.relative(root,project.workPath).split(path.sep).join('/');
  const projectFiles=relativePrefix?Object.fromEntries(Object.entries(files).filter(([key])=>key.startsWith(relativePrefix+'/')).map(([key,value])=>[key.slice(relativePrefix.length+1),value])):files;
- const built=await sdk.build({files:projectFiles,entrypoint:project.entrypoint,workPath:project.workPath,repoRootPath:root,config:{...config,functions,includeFiles:project.name==='main'?'vercel/generated/public-assets.json':undefined,projectSettings:{nodeVersion:'22.x'}},meta:{isDev:false},considerBuildCommand:false});
+ // Sources already exist in this checkout. Re-downloading FileFsRef entries
+ // onto their own paths truncates them; use the SDK's materialized-tree mode.
+ const sourcePackage=await readFile(path.join(root,'package.json'));
+ const built=await sdk.build({files:projectFiles,entrypoint:project.entrypoint,workPath:project.workPath,repoRootPath:root,config:{...config,functions,includeFiles:project.name==='main'?'vercel/generated/public-assets.json':undefined,projectSettings:{nodeVersion:'22.x'}},meta:{isDev:false,skipDownload:true},considerBuildCommand:false});
+ assert.deepEqual(await readFile(path.join(root,'package.json')),sourcePackage,'SDK proof must preserve the materialized source tree');
  const names=Object.keys(built.output.files);assert.ok(names.length);assert.equal(built.output.runtime,'nodejs22.x');
  assert.ok(names.some(x=>x.endsWith(project.name==='main'?'vercel/generated/public-assets.json':'apps/feedback/mailer/worker.js')),'Actual native trace must contain required runtime files');
  assert.ok(!names.some(x=>/(^|\/)(\.env[^/]*|\.dev\.vars[^/]*|test-support|\.proof)(\/|$)/.test(x)),'Native function bundle must not contain private/proof files');
