@@ -43,6 +43,8 @@ Use `feedbackUrl: null` for a static-only event with no feedback backend. Otherw
 ## Guides
 
 - [Getting started](docs/getting-started.md)
+- [Free-tier setup: Cloudflare website or private workflow](docs/free-tier-setup.md)
+- [Vercel Hobby: public static site only, eligibility and limits](docs/vercel-static-setup.md)
 - [Deploy on Cloudflare + Neon](docs/deployment.md)
 - [Guía de instalación y despliegue en español](docs/guia-es.md)
 - [Luma import, inventory, review, export and retention](docs/operators.md)

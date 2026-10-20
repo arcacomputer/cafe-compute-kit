@@ -2,6 +2,8 @@
 
 Start with [getting started](getting-started.md). These steps are for **your own new event**. Provisioning, secret updates, uploads, domain changes, mail and real release are separate external side effects; execute each only after its checklist. No command belongs in an install hook.
 
+For a free-tier-first deployment, start with [free-tier setup](free-tier-setup.md): provider-assigned hostnames, photos off, explicit CPU/database/email quotas and no automatic paid upgrades. [Vercel Hobby](vercel-static-setup.md) is an eligible personal non-commercial **static-site-only** option, not a backend port.
+
 ## 1. Freeze the target
 
 Record privately: repository commit/candidate, intended Cloudflare account and billing owner, hostname/zone, new Worker names, new Neon project/database and optional new R2 bucket. Get approval for costs before provisioning. Verify the authenticated account rather than relying on a login or account display name:

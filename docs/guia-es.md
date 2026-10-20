@@ -1,5 +1,7 @@
 # Guía práctica en español
 
+**Planes gratuitos:** empieza por [Cloudflare Free + Neon Free + AgentMail Free](free-tier-setup.md#en-español), sin fotos, sin dominio comprado y con cuotas explícitas. [Vercel Hobby](vercel-static-setup.md#en-español) es solo para el sitio público personal no comercial; no asumas que un evento patrocinado está permitido ni que el backend de Cloudflare funciona allí.
+
 Un kit independiente, no un producto oficial ni una promesa de beneficios. El código es MIT; eso **no** autoriza logos, marcas ni fotos de terceros. Trabajo asistido por IA, con custodia humana de **Luis Felipe Abarca**: [arca.computer](https://arca.computer/) · [felirami.com](https://felirami.com/). Los repositorios y registros originales siguen privados; no se incluyen asistentes, respuestas, fotos, testimonios ni códigos reales.
 
 ## 1. Elige el modo
